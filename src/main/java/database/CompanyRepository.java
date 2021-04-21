@@ -39,14 +39,17 @@ public class CompanyRepository implements CompaniesDAO {
                     "ID INT PRIMARY KEY AUTO_INCREMENT," +
                     "NAME VARCHAR(20) NOT NULL UNIQUE);";
             stmt.executeUpdate(sql);
-            System.out.println("Created table in database...");
-
             closeConnectionToDB();
             return true;
 
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace(System.out);
             if (e instanceof JdbcSQLSyntaxErrorException) {
-                return false; // todo handle message
+                if (((JdbcSQLSyntaxErrorException) e).getMessage().contains("already exists")) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         return false;

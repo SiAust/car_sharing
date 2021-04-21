@@ -18,6 +18,10 @@ public class Controller {
     }
 
     public void run() {
+        if (!model.create()) {
+            view.printDatabaseCreationError();
+            return;
+        }
         printMainMenu();
         scanner.close();
     }

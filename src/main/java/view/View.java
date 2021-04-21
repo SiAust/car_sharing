@@ -7,7 +7,7 @@ import java.util.List;
 public class View {
 
     public void printMainMenu() {
-        System.out.println("1. Log in as manager\n0. Exit");
+        System.out.println("1. Log in as a manager\n0. Exit");
     }
 
     public void printManagerMenu() {
@@ -21,7 +21,7 @@ public class View {
                 System.out.printf("%s\n", companies.get(i));
             }
         } else {
-            System.out.println("\nThe company list is empty!\n");
+            System.out.println("\nThe company list is empty!");
         }
     }
 
@@ -39,5 +39,9 @@ public class View {
 
     public void printInvalidInput() {
         System.out.println("Invalid input.");
+    }
+
+    public void printDatabaseCreationError() {
+        System.out.println("Problem creating database. Check command line args. \nExiting.");
     }
 }
