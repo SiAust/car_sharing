@@ -1,8 +1,12 @@
 ## Car Sharing
 
-Built with Java, H2 database, Git and Gradle.
+This project provides a car sharing 
+service by keeping a database of car companies. Car
+journeys will be matched to the customers needs.
 
-The aim of this project is to provide a car sharing 
-service by keeping a database of car companies and 
-match to the customers needs.
-
+### Technologies Utilised
+- H2 Database
+- JDBC
+- Git
+- Gradle
+- JUnit
