@@ -8,15 +8,25 @@ import java.util.List;
 public class View {
 
     // Menu output
+    /**
+     * Main menu displays "Log in as a manager", "Exit"
+     * */
     public void printMainMenu() {
         System.out.println("1. Log in as a manager\n0. Exit");
     }
 
+    /**
+     * Manager menu, "Company List", "Create company", "Back"
+     * */
     public void printManagerMenu() {
         System.out.println("\n1. Company list\n2. Create a company\n0. Back");
     }
 
     // Company specific output
+    /**
+     * Company menu - "Choose the company", "n. 'company name'", "Back".
+     * If there are no companies - "The company list is empty!".
+     * */
     public void printCompanyMenu(List<Company> companies) {
         if (companies.size() != 0) {
             System.out.println("\nChoose the company:");
@@ -27,6 +37,13 @@ public class View {
         } else {
             System.out.println("\nThe company list is empty!");
         }
+    }
+
+    /**
+     * Displays company name, "Car list", "Create a car", "Back".
+     * */
+    public void printCompanySpecificMenu(String name) {
+        System.out.println("\n'" + name + "' company:\n1. Car list\n2. Create a car\n0. Back");
     }
 
     public void printCreateCompany() {
@@ -41,11 +58,9 @@ public class View {
         System.out.println("Failed to create company.");
     }
 
-    public void printCompanyCarMenu(String name) {
-        System.out.println("\n'" + name + "' company:\n1. Car list\n2. Create a car\n0. Back");
-    }
-
     // Car specific output
+    /** Print the list of cars for a company, if any, otherwise "The car list is empty!".
+     * */
     public void printCarsList(List<Car> cars) {
         if (cars.size() > 0) {
             System.out.println("\nCar list");

@@ -1,6 +1,5 @@
 package controller;
 
-import model.Car;
 import model.Company;
 import view.View;
 
@@ -63,7 +62,7 @@ public class Controller {
                 input = Integer.parseInt(scanner.nextLine());
                 switch (input) {
                     case 1:
-                        companyListMenu();
+                        companyMenu();
                         break;
                     case 2:
                         createCompany();
@@ -77,28 +76,29 @@ public class Controller {
         } while (input != 0);
     }
 
-    private void companyListMenu() {
+    private void companyMenu() {
         List<Company> companies = model.getCompanies();
-        int input = 1;
-        do {
-            view.printCompanyMenu(companies);
-            try {
-                input = Integer.parseInt(scanner.nextLine());
-               if (input <= companies.size() && input != 0) {
-                    companyMenu(companies.get(input - 1));
-                } else if (input > companies.size()) { // number is greater than companies listed
-                    throw new NumberFormatException();
-                }
-            } catch (NumberFormatException e) {
-                view.printInvalidInput();
+        if (companies.size() == 0) {
+            view.printCompanyMenu(companies); // todo split methods? Overload?
+            return;
+        }
+        view.printCompanyMenu(companies);
+        try {
+            int input = Integer.parseInt(scanner.nextLine());
+            if (input <= companies.size() && input != 0) {
+                companySpecificMenu(companies.get(input - 1));
+            } else if (input > companies.size()) { // number is greater than companies listed
+                throw new NumberFormatException();
             }
-        } while (input != 0);
+        } catch (NumberFormatException e) {
+            view.printInvalidInput();
+        }
     }
 
-    private void companyMenu(Company company) {
+    private void companySpecificMenu(Company company) {
         int input = 1;
         do {
-            view.printCompanyCarMenu(company.getName());
+            view.printCompanySpecificMenu(company.getName());
             try {
                 input = Integer.parseInt(scanner.nextLine());
                 switch (input) {
@@ -127,6 +127,4 @@ public class Controller {
             view.printCompanyCreationFailed();
         }
     }
-
-    // Car
 }
