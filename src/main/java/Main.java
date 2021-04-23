@@ -1,4 +1,5 @@
 import controller.Controller;
+import controller.ControllerDB;
 import database.CompanyRepository;
 import view.View;
 
@@ -12,7 +13,7 @@ public class Main {
                 fileName = args[1];
             }
         }
-        Controller controller = new Controller(new CompanyRepository(fileName), new View());
+        Controller controller = new Controller(new ControllerDB(fileName), new View());
         controller.run();
     }
 }
