@@ -2,8 +2,10 @@ package view;
 
 import model.Car;
 import model.Company;
+import model.Customer;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class View {
 
@@ -12,7 +14,7 @@ public class View {
      * Main menu displays "Log in as a manager", "Exit"
      * */
     public void printMainMenu() {
-        System.out.println("1. Log in as a manager\n0. Exit");
+        System.out.println("1. Log in as a manager\n2. Log in as a customer\n3. Create a customer\n0. Exit");
     }
 
     /**
@@ -81,6 +83,45 @@ public class View {
             System.out.println("The car was added!");
         } else {
             System.out.println("Failed to add car.");
+        }
+    }
+
+    // Customer menu tree
+    public void printCustomerLoggedInMenu(List<Customer> customers) {
+        final StringBuilder menuString = new StringBuilder("Choose a customer:\n");
+        for (int i = 0; i < customers.size(); i++) {
+            menuString.append(String.format("%d. %s\n",i + 1, customers.get(i).getName()));
+        }
+        menuString.append("0. Back");
+        System.out.println(menuString);
+    }
+
+    public void printCustomerListEmpty() {
+        System.out.println("The customer list is empty!");
+    }
+
+    public void printCustomerOptions() {
+        System.out.println("1. Rent a car\n2. Return a rented car\n3. My rented car\n0. Back");
+    }
+
+    public void printNoCarRented() {
+        System.out.println("You didn't rent a car!");
+    }
+
+    public void printRentedCar(Car car, Company company) {
+        System.out.printf("Your rented car:\n%s\nCompany:\n%s\n%n",
+                car.getName(), company.getName());
+    }
+
+    public void printPromptCustomerName() {
+        System.out.println("Enter the customer name:");
+    }
+
+    public void printCustomerCreated(boolean isSuccess) {
+        if (isSuccess) {
+            System.out.println("The customer was added!");
+        } else {
+            System.out.println("The customer creation failed!");
         }
     }
 

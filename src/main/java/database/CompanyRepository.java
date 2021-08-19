@@ -54,8 +54,17 @@ public class CompanyRepository implements CompanyDAO {
     }
 
     @Override
-    public Company getCompany() {
-        return null; //todo add SQL
+    public Company getCompany(int companyID) {
+        String sql = "SELECT * FROM COMPANY WHERE ID = " + companyID + ";";
+        try {
+            ResultSet resultSet = stmt.executeQuery(sql);
+            return new Company(resultSet.getInt("ID"),
+                    resultSet.getString("NAME"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

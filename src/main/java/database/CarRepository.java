@@ -2,8 +2,8 @@ package database;
 
 import model.Car;
 import model.Company;
-import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 
+import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,18 +35,24 @@ public class CarRepository implements CarDAO {
         } catch (SQLException e) {
 //            e.printStackTrace(System.out);
             if (e instanceof JdbcSQLSyntaxErrorException) {
-                if (((JdbcSQLSyntaxErrorException) e).getMessage().contains("already exists")) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return e.getMessage().contains("already exists");
             }
         }
         return false;
     }
 
     @Override
-    public Car getCar() {
+    public Car getCar(int carID) {
+        String sql = "SELECT * FROM CAR WHERE ID = " + carID + ";";
+        try {
+            ResultSet resultSet = stmt.executeQuery(sql);
+            Car car = new Car(resultSet.getInt("ID"),
+                    resultSet.getString("NAME"),
+                    resultSet.getInt("COMPANY_ID"));
+            return car;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

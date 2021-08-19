@@ -7,8 +7,11 @@ import java.util.List;
 
 public interface CarDAO {
 
-    Car getCar();
+    Car getCar(int carID);
+
     List<Car> getCars(int companyID);
+
     boolean addCar(String name, int companyID);
+
     boolean removeCar(Car car);
 }
