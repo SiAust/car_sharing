@@ -79,7 +79,7 @@ public class Controller {
                 if (input - 1 <= customers.size() && input - 1 >= 0) {
                     /* set current customer */
                     currentCustomer = customers.get(input - 1);
-
+//                    System.out.println(currentCustomer);
                     customerOptions();
                 } else {
                     // todo no customer match
@@ -99,25 +99,63 @@ public class Controller {
             switch (input) {
                 case 1:
                     // rent a car
+                    customerRentCar();
                     break;
                 case 2:
                     // return a rented car
                     break;
                 case 3:
                     // my rented car
-                    customerRentedCar();
+                    customerMyRentedCar();
                     break;
             }
         } while (input != 0);
     }
 
-    public void customerRentedCar() {
+    public void customerRentCar() {
+        int input;
+        List<Company> companies = model.getCompanies();
+        do {
+            view.printCompanyMenu(companies);
+            input = Integer.parseInt(scanner.nextLine());
+            if (input <= companies.size() && input > 0) {
+                companyRentalCars(companies.get(input - 1));
+            } else {
+                // todo no matched company
+            }
+        } while (input != 0);
+    }
+
+    public void companyRentalCars(Company company) {
+        List<Car> cars = model.getCars(company.getId());
+        view.printAvailableRentalCars(cars);
+        int input = Integer.parseInt(scanner.nextLine());
+        if (input - 1 <= cars.size() && input > 0) {
+            // todo set Customer RENTED_CAR_ID
+            Car carRented = cars.get(input - 1);
+            if (model.setCustomerRentalCar(currentCustomer.getId(), carRented)) {
+                // success message
+                view.customerRentedCar(carRented);
+                currentCustomer.setRentedCarID(carRented.getId());
+            } else {
+                // failure message
+                view.printErrorRentingCar();
+            }
+        } else {
+            // todo no car for that menu index
+        }
+
+    }
+
+    public void customerMyRentedCar() {
         int rentedCardId = currentCustomer.getRentedCarID();
         if (rentedCardId == 0) {
             // RENTED_CAR_ID is 0 == SQL NULL
             view.printNoCarRented();
-        } else { // todo test
+//            System.out.println(currentCustomer);
+        } else {
             Car currentRentedCar = model.getCar(rentedCardId);
+//            System.out.println(currentRentedCar);
             Company carRentalCompany = model.getCompany(currentRentedCar.getCompanyID());
             view.printRentedCar(currentRentedCar, carRentalCompany);
         }

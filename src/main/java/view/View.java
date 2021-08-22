@@ -74,6 +74,22 @@ public class View {
         }
     }
 
+    public void printAvailableRentalCars(List<Car> cars) {
+        if (cars.size() > 0) {
+            System.out.println("\nChoose a car:");
+            for (int i = 0; i < cars.size(); i++) {
+                System.out.println((i + 1) + ". " + cars.get(i).getName());
+            }
+            System.out.println("0. Back");
+        } else {
+            System.out.println("\nThe car list is empty!");
+        }
+    }
+
+    public void customerRentedCar(Car car) {
+        System.out.println("\nYou rented '" + car.getName() + "'" );
+    }
+
     public void printCreateCar() {
         System.out.println("Enter the car name:");
     }
@@ -105,7 +121,7 @@ public class View {
     }
 
     public void printNoCarRented() {
-        System.out.println("You didn't rent a car!");
+        System.out.println("You didn't rent a car!\n");
     }
 
     public void printRentedCar(Car car, Company company) {
@@ -132,6 +148,10 @@ public class View {
 
     public void printDatabaseCreationError() {
         System.out.println("Problem creating database. Check command line args. \nExiting.");
+    }
+
+    public void printErrorRentingCar() {
+        System.out.println("Problem renting car.");
     }
 }
 

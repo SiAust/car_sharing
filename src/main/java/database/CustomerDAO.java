@@ -14,4 +14,5 @@ public interface CustomerDAO {
 
     boolean removeCustomer(Customer customer);
 
+    boolean setRentalCar(int customerID, int carID);
 }

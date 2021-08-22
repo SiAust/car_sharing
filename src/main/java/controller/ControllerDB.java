@@ -88,4 +88,7 @@ public class ControllerDB {
         return customerRepository.getAllCustomers();
     }
 
+    public boolean setCustomerRentalCar(int customerID, Car car) {
+        return customerRepository.setRentalCar(customerID, car.getId());
+    }
 }

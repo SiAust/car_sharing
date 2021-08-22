@@ -46,9 +46,13 @@ public class CarRepository implements CarDAO {
         String sql = "SELECT * FROM CAR WHERE ID = " + carID + ";";
         try {
             ResultSet resultSet = stmt.executeQuery(sql);
-            Car car = new Car(resultSet.getInt("ID"),
-                    resultSet.getString("NAME"),
-                    resultSet.getInt("COMPANY_ID"));
+            System.out.println(resultSet);
+            Car car = null;
+            if (resultSet.next()) {
+                car = new Car(resultSet.getInt("ID"),
+                        resultSet.getString("NAME"),
+                        resultSet.getInt("COMPANY_ID"));
+            }
             return car;
         } catch (SQLException e) {
             e.printStackTrace();

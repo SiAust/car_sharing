@@ -86,4 +86,18 @@ public class CustomerRepository implements CustomerDAO {
         // todo remove customer
         return false;
     }
+
+    @Override
+    public boolean setRentalCar(int customerID, int carID) {
+        String sql = "UPDATE CUSTOMER " +
+                "SET RENTED_CAR_ID = " + carID +
+                " WHERE ID = " + customerID + ";";
+        try {
+            stmt.executeUpdate(sql);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

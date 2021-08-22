@@ -58,9 +58,10 @@ public class CompanyRepository implements CompanyDAO {
         String sql = "SELECT * FROM COMPANY WHERE ID = " + companyID + ";";
         try {
             ResultSet resultSet = stmt.executeQuery(sql);
-            return new Company(resultSet.getInt("ID"),
-                    resultSet.getString("NAME"));
-
+            if (resultSet.next()) {
+                return new Company(resultSet.getInt("ID"),
+                        resultSet.getString("NAME"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
