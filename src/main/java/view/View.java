@@ -6,6 +6,7 @@ import model.Customer;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class View {
 
@@ -77,8 +78,11 @@ public class View {
     public void printAvailableRentalCars(List<Car> cars) {
         if (cars.size() > 0) {
             System.out.println("\nChoose a car:");
-            for (int i = 0; i < cars.size(); i++) {
-                System.out.println((i + 1) + ". " + cars.get(i).getName());
+            List<Car> filteredCars = cars.stream()
+                    .filter(Car::isRented)
+                    .collect(Collectors.toList());
+            for (int i = 0; i < filteredCars.size(); i++) {
+                System.out.println((i + 1) + ". " + filteredCars.get(i).getName());
             }
             System.out.println("0. Back");
         } else {
@@ -113,7 +117,7 @@ public class View {
     }
 
     public void printCustomerListEmpty() {
-        System.out.println("The customer list is empty!");
+        System.out.println("The customer list is empty!\n");
     }
 
     public void printCustomerOptions() {
@@ -124,9 +128,17 @@ public class View {
         System.out.println("You didn't rent a car!\n");
     }
 
+    public void printCarAlreadyRented() {
+        System.out.println("You've already rented a car!\n");
+    }
+
     public void printRentedCar(Car car, Company company) {
         System.out.printf("Your rented car:\n%s\nCompany:\n%s\n%n",
                 car.getName(), company.getName());
+    }
+
+    public void printNoCarsAvailable(Company company) {
+        System.out.printf("No cars available in the '%s' company\n", company.getName());
     }
 
     public void printPromptCustomerName() {
@@ -135,7 +147,7 @@ public class View {
 
     public void printCustomerCreated(boolean isSuccess) {
         if (isSuccess) {
-            System.out.println("The customer was added!");
+            System.out.println("The customer was added!\n");
         } else {
             System.out.println("The customer creation failed!");
         }

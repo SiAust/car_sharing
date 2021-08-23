@@ -14,4 +14,8 @@ public interface CarDAO {
     boolean addCar(String name, int companyID);
 
     boolean removeCar(Car car);
+
+    boolean setCarIsRented(boolean isRented, int carID);
+
+    boolean hasRentalCarsAvailable(Company company);
 }

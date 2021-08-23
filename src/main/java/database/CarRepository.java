@@ -25,6 +25,7 @@ public class CarRepository implements CarDAO {
                     "ID INT PRIMARY KEY AUTO_INCREMENT," +
                     "NAME VARCHAR(20) NOT NULL UNIQUE," +
                     "COMPANY_ID INT NOT NULL," +
+                    "IS_RENTED BOOLEAN DEFAULT FALSE," +
                     "CONSTRAINT fk_company_id FOREIGN KEY (COMPANY_ID)" +
                     "REFERENCES COMPANY(ID)" +
                     "ON UPDATE CASCADE " +
@@ -46,12 +47,13 @@ public class CarRepository implements CarDAO {
         String sql = "SELECT * FROM CAR WHERE ID = " + carID + ";";
         try {
             ResultSet resultSet = stmt.executeQuery(sql);
-            System.out.println(resultSet);
+//            System.out.println(resultSet);
             Car car = null;
             if (resultSet.next()) {
                 car = new Car(resultSet.getInt("ID"),
                         resultSet.getString("NAME"),
-                        resultSet.getInt("COMPANY_ID"));
+                        resultSet.getInt("COMPANY_ID"),
+                        resultSet.getBoolean("IS_RENTED"));
             }
             return car;
         } catch (SQLException e) {
@@ -69,7 +71,8 @@ public class CarRepository implements CarDAO {
             while (resultSet.next()) {
                 cars.add(new Car(resultSet.getInt("ID"),
                         resultSet.getString("NAME"),
-                        resultSet.getInt("COMPANY_ID")));
+                        resultSet.getInt("COMPANY_ID"),
+                        resultSet.getBoolean("IS_RENTED")));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -93,6 +96,39 @@ public class CarRepository implements CarDAO {
 
     @Override
     public boolean removeCar(Car car) {
+        return false;
+    }
+
+    @Override
+    public boolean setCarIsRented(boolean isRented, int carID) {
+        String sql =
+                "UPDATE CAR " +
+                "SET IS_RENTED = " + isRented + " " +
+                "WHERE ID = " + carID + ";";
+        try {
+            stmt.executeUpdate(sql);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasRentalCarsAvailable(Company company) {
+        String sql =
+                "SELECT * FROM CAR " +
+                "WHERE COMPANY_ID = " + company.getId() +
+                " AND IS_RENTED = FALSE";
+        try {
+            ResultSet resultSet = stmt.executeQuery(sql);
+//            System.out.println(resultSet);
+            if (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }

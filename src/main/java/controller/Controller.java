@@ -113,37 +113,51 @@ public class Controller {
     }
 
     public void customerRentCar() {
-        int input;
-        List<Company> companies = model.getCompanies();
-        do {
-            view.printCompanyMenu(companies);
-            input = Integer.parseInt(scanner.nextLine());
-            if (input <= companies.size() && input > 0) {
-                companyRentalCars(companies.get(input - 1));
-            } else {
-                // todo no matched company
-            }
-        } while (input != 0);
+        /* Check customer has already rented a car */
+        if (currentCustomer.getRentedCarID() != 0) {
+            view.printCarAlreadyRented();
+        } else  {
+            int input;
+            List<Company> companies = model.getCompanies();
+            do {
+                view.printCompanyMenu(companies);
+                input = Integer.parseInt(scanner.nextLine());
+                if (input <= companies.size() && input > 0) {
+                    companyRentalCars(companies.get(input - 1));
+                } else {
+                    // todo no matched company
+                }
+            } while (input != 0);
+        }
+
     }
 
     public void companyRentalCars(Company company) {
-        List<Car> cars = model.getCars(company.getId());
-        view.printAvailableRentalCars(cars);
-        int input = Integer.parseInt(scanner.nextLine());
-        if (input - 1 <= cars.size() && input > 0) {
-            // todo set Customer RENTED_CAR_ID
-            Car carRented = cars.get(input - 1);
-            if (model.setCustomerRentalCar(currentCustomer.getId(), carRented)) {
-                // success message
-                view.customerRentedCar(carRented);
-                currentCustomer.setRentedCarID(carRented.getId());
+        // todo check if cars are available and not rented
+        /* Check if manufacturer has available cars to rent */
+        if (model.companyHasCarsAvailable(company)) {
+            List<Car> cars = model.getCars(company.getId());
+            view.printAvailableRentalCars(cars);
+            int input = Integer.parseInt(scanner.nextLine());
+            if (input - 1 <= cars.size() && input > 0) {
+                Car carRented = cars.get(input - 1);
+                if (model.setCustomerRentalCar(currentCustomer.getId(), carRented)) {
+                    // success message
+                    view.customerRentedCar(carRented);
+                    currentCustomer.setRentedCarID(carRented.getId());
+                } else {
+                    // failure message
+                    view.printErrorRentingCar();
+                }
             } else {
-                // failure message
-                view.printErrorRentingCar();
+                // todo no car for that menu index - change this
+                view.printNoCarsAvailable(company);
             }
         } else {
-            // todo no car for that menu index
+            // todo no cars available message
+            view.printNoCarsAvailable(company);
         }
+
 
     }
 

@@ -76,7 +76,11 @@ public class ControllerDB {
     }
 
     public Car getCar(int carID) {
-        return carRepository.getCar(carID);
+        return carRepository.getCar(carID); // todo update to "available" cars
+    }
+
+    public boolean companyHasCarsAvailable(Company company) {
+        return carRepository.hasRentalCarsAvailable(company); // todo implement
     }
 
     // Customer table actions
@@ -89,6 +93,7 @@ public class ControllerDB {
     }
 
     public boolean setCustomerRentalCar(int customerID, Car car) {
-        return customerRepository.setRentalCar(customerID, car.getId());
+        return customerRepository.setRentalCar(customerID, car.getId())
+                && carRepository.setCarIsRented(true, car.getId());
     }
 }
