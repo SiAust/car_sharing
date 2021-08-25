@@ -2,14 +2,16 @@ package model;
 
 public class Car {
 
-    private int id;
-    private String name;
-    private int companyID;
+    private final int id;
+    private final String name;
+    private final int companyID;
+    private boolean isRented;
 
-    public Car(int id, String name, int companyID) {
+    public Car(int id, String name, int companyID, boolean isRented) {
         this.id = id;
         this.name = name;
         this.companyID = companyID;
+        this.isRented = isRented;
     }
 
     public String getName() {
@@ -24,8 +26,21 @@ public class Car {
         return companyID;
     }
 
+    public boolean isRented() {
+        return isRented;
+    }
+
+    public void setRented(boolean rented) {
+        isRented = rented;
+    }
+
     @Override
     public String toString() {
-        return name;
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", companyID=" + companyID +
+                ", isRented=" + isRented +
+                '}';
     }
 }

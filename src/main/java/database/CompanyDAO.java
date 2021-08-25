@@ -12,6 +12,6 @@ public interface CompanyDAO {
 
     boolean deleteCompany(int id);
 
-    Company getCompany();
+    Company getCompany(int companyID);
     List<Company> getCompanies() throws SQLException;
 }

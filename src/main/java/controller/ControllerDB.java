@@ -2,8 +2,10 @@ package controller;
 
 import database.CarRepository;
 import database.CompanyRepository;
+import database.CustomerRepository;
 import model.Car;
 import model.Company;
+import model.Customer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +25,7 @@ public class ControllerDB {
 
     private CompanyRepository companyRepository;
     private CarRepository carRepository;
+    private CustomerRepository customerRepository;
 
     public ControllerDB(String fileName) {
         db_url += fileName;
@@ -30,6 +33,7 @@ public class ControllerDB {
             openConnectionToDB();
             companyRepository = new CompanyRepository(stmt);
             carRepository = new CarRepository(stmt);
+            customerRepository = new CustomerRepository(stmt);
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
@@ -47,7 +51,7 @@ public class ControllerDB {
     }
 
     public boolean createTables() {
-        return companyRepository.createTable() && carRepository.create();
+        return companyRepository.createTable() && carRepository.create() && customerRepository.create();
     }
 
     // Company table actions
@@ -59,6 +63,9 @@ public class ControllerDB {
         return companyRepository.getCompanies();
     }
 
+    public Company getCompany(int companyID) {
+        return companyRepository.getCompany(companyID);
+    }
     // Car table actions
     public boolean addCar(String name, int companyID) {
         return carRepository.addCar(name, companyID);
@@ -68,4 +75,30 @@ public class ControllerDB {
         return carRepository.getCars(companyID);
     }
 
+    public Car getCar(int carID) {
+        return carRepository.getCar(carID); // todo update to "available" cars
+    }
+
+    public boolean companyHasCarsAvailable(Company company) {
+        return carRepository.hasRentalCarsAvailable(company); // todo implement
+    }
+
+    // Customer table actions
+    public boolean addCustomer(String customer) {
+        return customerRepository.addCustomer(customer);
+    }
+
+    public List<Customer> getCustomers() {
+        return customerRepository.getAllCustomers();
+    }
+
+    public boolean setCustomerRentalCar(int customerID, Car car) {
+        return customerRepository.setRentalCar(customerID, car.getId())
+                && carRepository.setCarIsRented(true, car.getId());
+    }
+
+    public boolean returnRentalCar(Customer customer) {
+        return customerRepository.setRentalCar(customer.getId(), 0)
+                && carRepository.setCarIsRented(false, customer.getRentedCarID());
+    }
 }
