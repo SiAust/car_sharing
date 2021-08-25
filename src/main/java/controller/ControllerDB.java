@@ -96,4 +96,9 @@ public class ControllerDB {
         return customerRepository.setRentalCar(customerID, car.getId())
                 && carRepository.setCarIsRented(true, car.getId());
     }
+
+    public boolean returnRentalCar(Customer customer) {
+        return customerRepository.setRentalCar(customer.getId(), 0)
+                && carRepository.setCarIsRented(false, customer.getRentedCarID());
+    }
 }

@@ -89,9 +89,17 @@ public class CustomerRepository implements CustomerDAO {
 
     @Override
     public boolean setRentalCar(int customerID, int carID) {
-        String sql = "UPDATE CUSTOMER " +
-                "SET RENTED_CAR_ID = " + carID +
-                " WHERE ID = " + customerID + ";";
+        // if carID is 0, set RENTED_CAR_ID to NULL
+        String sql;
+        if (carID == 0) {
+            sql = "UPDATE CUSTOMER " +
+                    "SET RENTED_CAR_ID = NULL " +
+                    " WHERE ID = " + customerID + ";";
+        } else {
+            sql = "UPDATE CUSTOMER " +
+                    "SET RENTED_CAR_ID = " + carID +
+                    " WHERE ID = " + customerID + ";";
+        }
         try {
             stmt.executeUpdate(sql);
             return true;

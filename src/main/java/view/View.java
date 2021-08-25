@@ -6,6 +6,7 @@ import model.Customer;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class View {
@@ -75,14 +76,12 @@ public class View {
         }
     }
 
+    /** Prints numbered list of available cars */
     public void printAvailableRentalCars(List<Car> cars) {
         if (cars.size() > 0) {
             System.out.println("\nChoose a car:");
-            List<Car> filteredCars = cars.stream()
-                    .filter(Car::isRented)
-                    .collect(Collectors.toList());
-            for (int i = 0; i < filteredCars.size(); i++) {
-                System.out.println((i + 1) + ". " + filteredCars.get(i).getName());
+            for (int i = 0; i < cars.size(); i++) {
+                System.out.println((i + 1) + ". " + cars.get(i).getName());
             }
             System.out.println("0. Back");
         } else {
@@ -90,6 +89,7 @@ public class View {
         }
     }
 
+    /** Prints "You rented 'car name'" */
     public void customerRentedCar(Car car) {
         System.out.println("\nYou rented '" + car.getName() + "'" );
     }
@@ -124,6 +124,8 @@ public class View {
         System.out.println("1. Rent a car\n2. Return a rented car\n3. My rented car\n0. Back");
     }
 
+    /**
+     * Prints "You didn't rent a car!" to stdout */
     public void printNoCarRented() {
         System.out.println("You didn't rent a car!\n");
     }
@@ -137,6 +139,18 @@ public class View {
                 car.getName(), company.getName());
     }
 
+    /**
+     * Prints "Car returned successfully." if true or "Problem returning car!"
+     * @param isSuccessful condition decides output */
+    public void printIsCarReturned(boolean isSuccessful) {
+        if (isSuccessful) {
+            System.out.println("Car returned successfully.\n");
+        } else {
+            System.out.println("Problem returning car!\n");
+        }
+    }
+
+    /** Prints "No cars available in the <a href="#{@link}">{@link Company}</a> company" */
     public void printNoCarsAvailable(Company company) {
         System.out.printf("No cars available in the '%s' company\n", company.getName());
     }

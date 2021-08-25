@@ -8,6 +8,8 @@ import view.View;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Controller {
 
@@ -89,6 +91,7 @@ public class Controller {
         } else {
             view.printCustomerListEmpty();
         }
+        currentCustomer = null;
     }
 
     private void customerOptions() {
@@ -103,6 +106,7 @@ public class Controller {
                     break;
                 case 2:
                     // return a rented car
+                    customerReturnRentedCar();
                     break;
                 case 3:
                     // my rented car
@@ -112,35 +116,36 @@ public class Controller {
         } while (input != 0);
     }
 
-    public void customerRentCar() {
+    private void customerRentCar() {
         /* Check customer has already rented a car */
         if (currentCustomer.getRentedCarID() != 0) {
             view.printCarAlreadyRented();
         } else  {
             int input;
             List<Company> companies = model.getCompanies();
-            do {
-                view.printCompanyMenu(companies);
-                input = Integer.parseInt(scanner.nextLine());
-                if (input <= companies.size() && input > 0) {
-                    companyRentalCars(companies.get(input - 1));
-                } else {
-                    // todo no matched company
-                }
-            } while (input != 0);
+            view.printCompanyMenu(companies);
+            input = Integer.parseInt(scanner.nextLine());
+            if (input <= companies.size() && input > 0) {
+                companyRentalCars(companies.get(input - 1));
+            } else {
+                view.printInvalidInput();
+            }
         }
 
     }
 
-    public void companyRentalCars(Company company) {
-        // todo check if cars are available and not rented
+    private void companyRentalCars(Company company) {
         /* Check if manufacturer has available cars to rent */
         if (model.companyHasCarsAvailable(company)) {
             List<Car> cars = model.getCars(company.getId());
-            view.printAvailableRentalCars(cars);
+            /* Filter the cars which are rented */
+            List<Car> filteredCars = cars.stream()
+                    .filter(Predicate.not(Car::isRented))
+                    .collect(Collectors.toList());
+            view.printAvailableRentalCars(filteredCars);
             int input = Integer.parseInt(scanner.nextLine());
-            if (input - 1 <= cars.size() && input > 0) {
-                Car carRented = cars.get(input - 1);
+            if (input - 1 <= filteredCars.size() && input > 0) {
+                Car carRented = filteredCars.get(input - 1);
                 if (model.setCustomerRentalCar(currentCustomer.getId(), carRented)) {
                     // success message
                     view.customerRentedCar(carRented);
@@ -149,19 +154,29 @@ public class Controller {
                     // failure message
                     view.printErrorRentingCar();
                 }
-            } else {
-                // todo no car for that menu index - change this
-                view.printNoCarsAvailable(company);
+            } else if (input - 1 > filteredCars.size()){
+                view.printInvalidInput();
             }
         } else {
-            // todo no cars available message
             view.printNoCarsAvailable(company);
         }
-
-
     }
 
-    public void customerMyRentedCar() {
+    private void customerReturnRentedCar() {
+        int rentedCarID = currentCustomer.getRentedCarID();
+        if (rentedCarID != 0) {
+            if (model.returnRentalCar(currentCustomer)) {
+                view.printIsCarReturned(true);
+                currentCustomer.setRentedCarID(0);
+            } else {
+                view.printIsCarReturned(false);
+            }
+        } else {
+            view.printNoCarRented();
+        }
+    }
+
+    private void customerMyRentedCar() {
         int rentedCardId = currentCustomer.getRentedCarID();
         if (rentedCardId == 0) {
             // RENTED_CAR_ID is 0 == SQL NULL
